@@ -13,5 +13,6 @@
     <PackageReference Include="FastEndpoints" Version="5.0.0"/>
     <PackageReference Include="FastEndpoints.Swagger" Version="5.0.0"/>
     <PackageReference Include="FluentValidation" Version="11.2.1"/>
+    <PackageReference Include="FastEndpoints.Security" Version="5.0.0"/>
   </ItemGroup>
 </Project>

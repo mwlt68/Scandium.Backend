@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FastEndpoints;
 using Scandium.Data;
+using Scandium.Services.Abstract;
 
 namespace Scandium.Features.User.Create
 {
     public class Endpoint : Endpoint<Request,Response,Mapper>
     {
+        private readonly IJwtService jwtService;
         private readonly IUserRepo userRepo;
-        public Endpoint(IUserRepo userRepo)
+        public Endpoint(IJwtService jwtService,IUserRepo userRepo)
         {
             this.userRepo = userRepo;
+            this.jwtService = jwtService;
         }
 
         public override void Configure()
@@ -29,7 +28,7 @@ namespace Scandium.Features.User.Create
                 var addedUser = await userRepo.AddAsync(user);
                 if(addedUser != null){
                     await SendAsync(new Response(){
-                        Token = "Token",
+                        Token = jwtService.Create(addedUser.Id),
                         Id = addedUser.Id,
                         Username = addedUser.Username
                     });
