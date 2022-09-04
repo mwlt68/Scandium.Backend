@@ -9,7 +9,6 @@ namespace Scandium.Model
         public string? Username { get; set; }
 
         [Required]
-        [MaxLength(25)]
         public string? Password { get; set; }
     }
 }
