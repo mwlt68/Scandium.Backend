@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Scandium.Helpers;
 
 namespace Scandium.Features.User.Create
 {
@@ -9,7 +10,7 @@ namespace Scandium.Features.User.Create
     {
         public override Scandium.Model.User  ToEntity(Request r) => new Model.User(){
             Username = r.Username,
-            Password = r.Password
+            Password = MD5HashHelper.Create(r.Password!)
         };
     }
 }
