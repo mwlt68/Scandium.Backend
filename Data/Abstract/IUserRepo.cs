@@ -2,17 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Scandium.Data.Abstract;
 using Scandium.Model;
 
 namespace Scandium.Data
 {
-    public interface IUserRepo
+    public interface IUserRepo : IGenericRepository<User>
     {
-        Task SaveChanges();
-        Task<User?> GetUserById(int id);
-        Task<IEnumerable<User>> GetAllUsers();
-        Task CreateUser(User cmd);
-
-        void DeleteUser(User cmd);
     }
 }
