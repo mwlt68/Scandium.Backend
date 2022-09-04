@@ -5,11 +5,11 @@ namespace Scandium.Model
     public class User : BaseEntity
     {
         [Required]
-        [MinLength(7)]
+        [MaxLength(25)]
         public string? Username { get; set; }
 
         [Required]
-        [MinLength(7)]
+        [MaxLength(25)]
         public string? Password { get; set; }
     }
 }
