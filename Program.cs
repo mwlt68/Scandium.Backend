@@ -1,10 +1,8 @@
 using FastEndpoints;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scandium.Data;
 using FastEndpoints.Swagger;
 using FastEndpoints.Security;
-using Scandium.Model.Settings;
 using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
