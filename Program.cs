@@ -6,6 +6,9 @@ using FastEndpoints.Security;
 using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
+using Scandium.Services.Concreate;
+using Scandium.Data.Abstract;
+using Scandium.Data.Concreate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +23,9 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetValue<string>("Jwt:Key"));
 
 builder.Services.AddScoped<IJwtService,JwtService>();
+builder.Services.AddTransient<IHttpContextService,HttpContextService>();
 builder.Services.AddScoped<IUserRepo,UserRepo>();
+builder.Services.AddScoped<IMessageRepository,MessageRepository>();
 
 var app = builder.Build();
 
