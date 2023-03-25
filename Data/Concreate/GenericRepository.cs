@@ -44,7 +44,7 @@ namespace Scandium.Data.Concreate
             return entity;
         }
 
-        public virtual async Task<bool> DeleteAsync(int id)
+        public virtual async Task<bool> DeleteAsync(Guid id)
         {
             TEntity? deleteEntity = await context.Set<TEntity>().FindAsync(id);
             if (deleteEntity != null)
@@ -58,7 +58,7 @@ namespace Scandium.Data.Concreate
             throw new KeyNotFoundException("Entity not found !");
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync(int id)
+        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await context.Set<TEntity>().FirstOrDefaultAsync(x=> x.Id == id);
         }

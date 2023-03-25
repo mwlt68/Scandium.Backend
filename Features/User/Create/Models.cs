@@ -35,7 +35,7 @@ public class Validator : Validator<Request>
 }
     public class Response
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string?  Username { get; set; } 
         public string?  Token { get; set; } 
     }

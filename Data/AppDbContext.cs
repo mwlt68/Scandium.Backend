@@ -10,6 +10,13 @@ namespace Scandium.Data
             
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasPostgresExtension("uuid-ossp");
+            modelBuilder.ApplyConfiguration(new UserConfigurations());
+        }
+
         public DbSet<User> Users => Set<User>();
     }
 }

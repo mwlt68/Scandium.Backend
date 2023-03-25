@@ -13,7 +13,7 @@ namespace Scandium.Services
         {
             this.jwtSettings = jwtSettings.Value;
         }
-        public string Create(int userId)
+        public string Create(Guid userId)
         {
             var userIdClaim = new Claim(ClaimTypes.NameIdentifier,userId.ToString());
             var jwtToken = JWTBearer.CreateToken(
