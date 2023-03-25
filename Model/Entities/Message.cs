@@ -11,5 +11,8 @@ namespace Scandium.Model.Entities
         public Guid ReceiverId { get; set; }
         [Required]
         public string? Content { get; set; }
+        public virtual User Receiver { get; set; }
+        public virtual User Sender { get; set; }
+
     }
 }
