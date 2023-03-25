@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data
 {
@@ -18,5 +19,6 @@ namespace Scandium.Data
         }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Message> Messages => Set<Message>();
     }
 }

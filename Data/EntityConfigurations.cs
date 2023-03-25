@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data
 {
@@ -16,6 +17,13 @@ namespace Scandium.Data
     public class UserConfigurations : BaseEntityConfigurations<User>
     {
         public override void Configure(EntityTypeBuilder<User> builder)
+        {
+            base.Configure(builder);
+        }
+    }
+    public class MessageConfigurations : BaseEntityConfigurations<Message>
+    {
+        public override void Configure(EntityTypeBuilder<Message> builder)
         {
             base.Configure(builder);
         }
