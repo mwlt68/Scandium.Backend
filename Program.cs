@@ -7,6 +7,7 @@ using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
 using Scandium.Middlewares;
+using Scandium.Actions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +22,8 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetValue<string>("Jwt:Key"));
 
-builder.Services.AddScoped<IJwtService,JwtService>();
-builder.Services.AddScoped<IUserRepo,UserRepo>();
-
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -34,5 +34,5 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseFastEndpoints();
+app.UseFastEndpoints(FastEndpointsAction.GetConfigActions);
 app.Run();
