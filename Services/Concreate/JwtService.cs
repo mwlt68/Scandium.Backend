@@ -13,7 +13,7 @@ namespace Scandium.Services
         {
             this.jwtSettings = jwtSettings.Value;
         }
-        public string Create(int userId)
+        public string Create(Guid userId)
         {
             if(jwtSettings?.Key == null)
                 throw new Exception("JWT key not found !");

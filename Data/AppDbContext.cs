@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data
 {
@@ -10,6 +11,14 @@ namespace Scandium.Data
             
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasPostgresExtension("uuid-ossp");
+            modelBuilder.ApplyConfiguration(new UserConfigurations());
+        }
+
         public DbSet<User> Users => Set<User>();
+        public DbSet<Message> Messages => Set<Message>();
     }
 }

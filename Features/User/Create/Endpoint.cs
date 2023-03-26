@@ -4,11 +4,11 @@ using Scandium.Services.Abstract;
 
 namespace Scandium.Features.User.Create
 {
-    public class Endpoint : Endpoint<Request,Response,Mapper>
+    public class Endpoint : Endpoint<Request, Response, Mapper>
     {
         private readonly IJwtService jwtService;
         private readonly IUserRepo userRepo;
-        public Endpoint(IJwtService jwtService,IUserRepo userRepo)
+        public Endpoint(IJwtService jwtService, IUserRepo userRepo)
         {
             this.userRepo = userRepo;
             this.jwtService = jwtService;
@@ -22,17 +22,17 @@ namespace Scandium.Features.User.Create
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            bool usernameUnique = !await userRepo.AnyAsync(x=> x.Username == req.Username);
-            if(usernameUnique){
+            bool usernameUnique = !await userRepo.AnyAsync(x => x.Username == req.Username);
+            if (usernameUnique)
+            {
                 var user = Map.ToEntity(req);
                 var addedUser = await userRepo.AddAsync(user);
-                if(addedUser != null){
-                    await SendAsync(new Response(){
-                        Token = jwtService.Create(addedUser.Id),
-                        Id = addedUser.Id,
-                        Username = addedUser.Username
-                    });
-                }else throw new Exception("User insert exception !");
+                await SendAsync(new Response()
+                {
+                    Token = jwtService.Create(addedUser.Id),
+                    Id = addedUser.Id,
+                    Username = addedUser.Username
+                });
             }
             else throw new Exception("Username must be unique !");
         }

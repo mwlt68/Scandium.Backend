@@ -8,6 +8,9 @@ using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
 using Scandium.Middlewares;
 using Scandium.Actions;
+using Scandium.Services.Concreate;
+using Scandium.Data.Abstract;
+using Scandium.Data.Concreate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +25,10 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetValue<string>("Jwt:Key"));
 
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IJwtService,JwtService>();
+builder.Services.AddTransient<IHttpContextService,HttpContextService>();
+builder.Services.AddScoped<IUserRepo,UserRepo>();
+builder.Services.AddScoped<IMessageRepository,MessageRepository>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -32,6 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUi3(c => c.ConfigureDefaults());
 }
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints(FastEndpointsAction.GetConfigActions);
