@@ -1,5 +1,6 @@
 using FastEndpoints;
 using Scandium.Data;
+using Scandium.Exceptions;
 using Scandium.Helpers;
 using Scandium.Services.Abstract;
 
@@ -33,7 +34,7 @@ namespace Scandium.Features.User.Authentication
                     Token = jwtService.Create(user.Id)
                 });
             }
-            else throw new KeyNotFoundException("User not found !");
+            else throw new NotFoundException(typeof(Scandium.Model.User));
 
         }
     }

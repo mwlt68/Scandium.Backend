@@ -1,5 +1,6 @@
 using FastEndpoints;
 using Scandium.Data;
+using Scandium.Exceptions;
 using Scandium.Services.Abstract;
 
 namespace Scandium.Features.User.Create
@@ -34,7 +35,7 @@ namespace Scandium.Features.User.Create
                     Username = addedUser.Username
                 });
             }
-            else throw new Exception("Username must be unique !");
+            else throw new BadRequestException("Username must be unique !");
         }
     }
 }
