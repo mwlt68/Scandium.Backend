@@ -17,5 +17,14 @@ namespace Scandium.Data.Concreate
                 .Include(x=> x.Receiver)
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new KeyNotFoundException("Entity not found !");
         }
+        public virtual async Task<List<Message>> GetAllMessagesAsync(Guid currentUserId)
+        {
+            return await GetDbSet
+                .Include(x=> x.Sender)
+                .Include(x=> x.Receiver)
+                .OrderBy(x=>x.CreatedAt)
+                .Where(x => x.SenderId == currentUserId || x.ReceiverId == currentUserId)
+                .ToListAsync();
+        }
     }
 }
