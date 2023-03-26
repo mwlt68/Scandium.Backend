@@ -6,6 +6,8 @@ using FastEndpoints.Security;
 using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
+using Scandium.Middlewares;
+using Scandium.Actions;
 using Scandium.Services.Concreate;
 using Scandium.Data.Abstract;
 using Scandium.Data.Concreate;
@@ -16,6 +18,7 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerDoc();
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddSettings(builder.Configuration);
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -26,7 +29,6 @@ builder.Services.AddScoped<IJwtService,JwtService>();
 builder.Services.AddTransient<IHttpContextService,HttpContextService>();
 builder.Services.AddScoped<IUserRepo,UserRepo>();
 builder.Services.AddScoped<IMessageRepository,MessageRepository>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -34,8 +36,9 @@ if (app.Environment.IsDevelopment())
     app.UseOpenApi();
     app.UseSwaggerUi3(c => c.ConfigureDefaults());
 }
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseFastEndpoints();
+app.UseFastEndpoints(FastEndpointsAction.GetConfigActions);
 app.Run();

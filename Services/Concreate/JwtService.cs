@@ -8,13 +8,16 @@ namespace Scandium.Services
 {
     public class JwtService : IJwtService
     {
-        JwtSettings jwtSettings;
+        private readonly JwtSettings? jwtSettings;
         public JwtService(IOptions<JwtSettings> jwtSettings)
         {
             this.jwtSettings = jwtSettings.Value;
         }
         public string Create(Guid userId)
         {
+            if(jwtSettings?.Key == null)
+                throw new Exception("JWT key not found !");
+                
             var userIdClaim = new Claim(ClaimTypes.NameIdentifier,userId.ToString());
             var jwtToken = JWTBearer.CreateToken(
                 signingKey: jwtSettings.Key,
