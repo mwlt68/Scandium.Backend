@@ -22,7 +22,7 @@ namespace Scandium.Middlewares
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json";
-            ServiceResponse response = new ServiceResponse(success:false);
+            ServiceResponse response = new ServiceResponse();
             if (ex is CustomBaseException)
             {
                 context.Response.StatusCode = ex switch
@@ -32,12 +32,12 @@ namespace Scandium.Middlewares
                     InternalServerException => StatusCodes.Status500InternalServerError,
                     _ => StatusCodes.Status500InternalServerError,
                 };
-                response.ErrorContents = (ex as CustomBaseException).ErrorContents;
+                response.ErrorContents = ((CustomBaseException)ex).ErrorContents;
             }
             else
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                response.CustomError = false;
+                response.IsCustomException = false;
                 response.ErrorContents = new List<ErrorResponseContent>()
                 {
                     new ErrorResponseContent("Exception",ex.Message)

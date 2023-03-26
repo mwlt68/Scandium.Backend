@@ -2,15 +2,16 @@ namespace Scandium.Model.BaseModels
 {
     public abstract class BaseResponse
     {
-        public BaseResponse(bool success = true, bool customError = true, List<ErrorResponseContent>? errorContents = null)
+        public BaseResponse(bool isSuccess = true, bool isCustomException = true,bool isValidationError = false ,List<ErrorResponseContent>? errorContents = null)
         {
-            Success = success;
-            CustomError = customError;
+            IsSuccess = isSuccess;
+            IsCustomException = isCustomException;
             ErrorContents = errorContents;
         }
 
-        public bool Success { get; set; }
-        public bool CustomError { get; set; }
+        public bool IsSuccess { get; set; }
+        public bool IsCustomException { get; set; }
+        public bool IsValidationError { get; set; }
         public List<ErrorResponseContent>? ErrorContents { get; set; }
     }
 
@@ -31,10 +32,10 @@ namespace Scandium.Model.BaseModels
     {
         public T? Value { get; set; }
 
-        public ServiceResponse(bool success = true, bool customError = true, List<ErrorResponseContent>? errorContents = null) : base(success, customError, errorContents)
+        public ServiceResponse(bool isSuccess = true, bool isCustomException = true,bool isValidationError = false , List<ErrorResponseContent>? errorContents = null) : base(isSuccess, isCustomException,isValidationError,errorContents)
         {
         }
-        public ServiceResponse(T? value, bool success = true, bool customError = true, List<ErrorResponseContent>? errorContents = null) : base(success, customError, errorContents)
+        public ServiceResponse(T? value, bool isSuccess = true, bool isCustomException = true,bool isValidationError = false , List<ErrorResponseContent>? errorContents = null) : base(isSuccess, isCustomException, isValidationError,errorContents)
         {
             Value = value;
         }
@@ -43,7 +44,7 @@ namespace Scandium.Model.BaseModels
     public class ServiceResponse : BaseResponse
     {
 
-        public ServiceResponse(bool success = true, bool customError = true, List<ErrorResponseContent>? errorContents = null) : base(success, customError, errorContents)
+        public ServiceResponse(bool isSuccess = false, bool isCustomException = true, bool isValidationError = false ,List<ErrorResponseContent>? errorContents = null) : base(isSuccess, isCustomException,isValidationError, errorContents)
         {
         }
     }
