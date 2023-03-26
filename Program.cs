@@ -6,6 +6,7 @@ using FastEndpoints.Security;
 using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
+using Scandium.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerDoc();
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddSettings(builder.Configuration);
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -29,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseOpenApi();
     app.UseSwaggerUi3(c => c.ConfigureDefaults());
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints();
