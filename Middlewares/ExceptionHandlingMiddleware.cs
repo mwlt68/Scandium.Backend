@@ -1,5 +1,5 @@
-
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Scandium.Exceptions;
 using Scandium.Model.BaseModels;
 
@@ -43,8 +43,10 @@ namespace Scandium.Middlewares
                     new ErrorResponseContent("Exception",ex.Message)
                 };
             }
-            
-            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var json = JsonConvert.SerializeObject(response, serializerSettings);
+            await context.Response.WriteAsync(json);
         }
 
     }
