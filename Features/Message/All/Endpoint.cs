@@ -1,12 +1,13 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
 namespace Scandium.Features.Message.All
 {
-    public class Endpoint : EndpointWithMapping<Request, Response, MessageEntity>
+    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<List<MessageResponseDto>> , MessageEntity>
     {
         private readonly IHttpContextService httpContextService;
         private readonly IMessageRepository messageRepository;
@@ -29,9 +30,7 @@ namespace Scandium.Features.Message.All
             await SendAsync(response);
         }
 
-        public  Response MapFromEntity(List<MessageEntity> es) => new()
-        {
-            Messages = es.Select(e => new MessageResponseDto(e)).ToList()
-        };
+        public ServiceResponse<List<MessageResponseDto>> MapFromEntity(List<MessageEntity> es) => new ServiceResponse<List<MessageResponseDto>>(es.Select(e => new MessageResponseDto(e)).ToList());
+
     }
 }
