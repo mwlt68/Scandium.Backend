@@ -20,17 +20,17 @@ namespace Scandium.Features.Message.All
         public override void Configure()
         {
             Verbs(Http.GET);
-            Routes("/message/list");
+            Routes("/message/last");
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var userId = httpContextService.GetUserIdFromClaims();
-            var messages = await messageRepository.GetAllMessagesAsync(userId);
+            var messages = await messageRepository.GetLastMessagesAsync(userId);
             var response = MapFromEntity(messages);
             await SendAsync(response);
         }
 
-        public ServiceResponse<List<MessageResponseDto>> MapFromEntity(List<MessageEntity> es) => new ServiceResponse<List<MessageResponseDto>>(es.Select(e => new MessageResponseDto(e)).ToList());
+        public ServiceResponse<List<MessageResponseDto>> MapFromEntity(List<MessageEntity?> es) => new ServiceResponse<List<MessageResponseDto>>(es.Where(x=> x!= null).Select(e => new MessageResponseDto(e!)).ToList());
 
     }
 }
