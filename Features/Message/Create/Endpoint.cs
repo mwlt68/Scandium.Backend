@@ -1,11 +1,12 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
 namespace Scandium.Features.Message.Create
 {
-    public class Endpoint : EndpointWithMapping<Request, Response, MessageEntity>
+    public class Endpoint : EndpointWithMapping<Request, MessageResponseDto, MessageEntity>
     {
         private readonly IHttpContextService httpContextService;
         private readonly IMessageRepository messageRepository;
@@ -35,15 +36,6 @@ namespace Scandium.Features.Message.Create
             ReceiverId = r.ReceiverId,
             Content = r.Content,
         };
-        public override Response MapFromEntity(MessageEntity e) => new()
-        {
-            Content = e.Content,
-            CreateDate = e.CreatedAt,
-            Id = e.Id,
-            ReceiverId = e.ReceiverId,
-            ReceiverUsername = e.Receiver.Username,
-            SenderId = e.SenderId,
-            SenderUsername = e.Sender.Username
-        };
+        public override MessageResponseDto MapFromEntity(MessageEntity e) => new(e);
     }
 }

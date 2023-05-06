@@ -1,5 +1,6 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
@@ -30,17 +31,7 @@ namespace Scandium.Features.Message.All
 
         public  Response MapFromEntity(List<MessageEntity> es) => new()
         {
-            Messages = es.Select(e =>
-                new Create.Response()
-                {
-                    Content = e.Content,
-                    CreateDate = e.CreatedAt,
-                    Id = e.Id,
-                    ReceiverId = e.ReceiverId,
-                    ReceiverUsername = e.Receiver.Username,
-                    SenderId = e.SenderId,
-                    SenderUsername = e.Sender.Username
-                }).ToList()
+            Messages = es.Select(e => new MessageResponseDto(e)).ToList()
         };
     }
 }

@@ -1,4 +1,6 @@
 
+using Scandium.Model.Dto;
+
 namespace Scandium.Features.Message.All
 {
     public class Request
@@ -8,7 +10,7 @@ namespace Scandium.Features.Message.All
 
     public class Response
     {
-        public List<Scandium.Features.Message.Create.Response> Messages { get; set; }
+        public List<MessageResponseDto>? Messages { get; set; }
     }
 
 
