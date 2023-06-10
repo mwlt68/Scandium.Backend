@@ -1,5 +1,5 @@
 
-namespace Scandium.Features.Message.Create
+namespace Scandium.Features.Message.Insert
 {
     public class Request
     {

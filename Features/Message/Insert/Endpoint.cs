@@ -5,7 +5,7 @@ using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
-namespace Scandium.Features.Message.Create
+namespace Scandium.Features.Message.Insert
 {
     public class Endpoint : EndpointWithMapping<Request,ServiceResponse<MessageResponseDto>, MessageEntity>
     {
