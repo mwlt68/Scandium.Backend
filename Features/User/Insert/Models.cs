@@ -1,7 +1,7 @@
 using FastEndpoints;
 using FluentValidation;
 
-namespace Scandium.Features.User.Create
+namespace Scandium.Features.User.Insert
 {
     public class Request
     {

@@ -1,6 +1,6 @@
 using Scandium.Helpers;
 
-namespace Scandium.Features.User.Create
+namespace Scandium.Features.User.Insert
 {
     public class Mapper : FastEndpoints.Mapper<Request, Response, Scandium.Model.User>
     {
