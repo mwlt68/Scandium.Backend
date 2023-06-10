@@ -10,7 +10,7 @@ namespace Scandium.Data.Concreate
         public MessageRepository(AppDbContext context) : base(context)
         {
         }
-        public virtual async Task<Message> GetByIdThrowAsync(Guid id)
+        public override async Task<Message> GetByIdThrowAsync(Guid id)
         {
             return await GetDbSet
                 .Include(x => x.Sender)

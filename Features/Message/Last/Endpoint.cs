@@ -5,7 +5,7 @@ using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
-namespace Scandium.Features.Message.All
+namespace Scandium.Features.Message.Last
 {
     public class Endpoint : EndpointWithMapping<Request, ServiceResponse<List<MessageResponseDto>> , MessageEntity>
     {

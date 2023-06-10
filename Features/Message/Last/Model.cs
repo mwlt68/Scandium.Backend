@@ -1,5 +1,5 @@
 
-namespace Scandium.Features.Message.All
+namespace Scandium.Features.Message.Last
 {
     public class Request
     {
