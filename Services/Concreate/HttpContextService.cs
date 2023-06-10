@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Scandium.Exceptions;
 using Scandium.Services.Abstract;
 
 namespace Scandium.Services.Concreate
@@ -20,7 +21,7 @@ namespace Scandium.Services.Concreate
                 if(isGuid)
                     return Guid.Parse(userIdString);
             }
-            throw new KeyNotFoundException("User identityfier not found");
+            throw new NotFoundException("User identityfier not found");
         }
     }
 }

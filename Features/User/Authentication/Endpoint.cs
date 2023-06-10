@@ -1,11 +1,13 @@
 using FastEndpoints;
 using Scandium.Data;
+using Scandium.Exceptions;
 using Scandium.Helpers;
+using Scandium.Model.BaseModels;
 using Scandium.Services.Abstract;
 
 namespace Scandium.Features.User.Authentication
 {
-    public class Endpoint : Endpoint<Request,Response>
+    public class Endpoint : Endpoint<Request,ServiceResponse<Response>>
     {
         private readonly IUserRepo userRepo;
         private readonly IJwtService jwtService;
@@ -17,7 +19,7 @@ namespace Scandium.Features.User.Authentication
         }
         public override void Configure()
         {
-            Verbs(Http.GET);
+            Verbs(Http.POST);
             Routes("/authentication");
             AllowAnonymous();
         }
@@ -27,13 +29,14 @@ namespace Scandium.Features.User.Authentication
             string hashedPassword = MD5HashHelper.Create(req.Password!);
             var user  = await userRepo.GetAsync(x=> x.Username == req.Username && x.Password == hashedPassword);
             if(user != null){
-                await SendAsync (new Response(){
+                var response = new Response(){
                     Id = user.Id,
                     Username = user.Username,
                     Token = jwtService.Create(user.Id)
-                });
+                };
+                await SendAsync (new ServiceResponse<Response>(response));
             }
-            else throw new KeyNotFoundException("User not found !");
+            else throw new NotFoundException(typeof(Scandium.Model.User));
 
         }
     }

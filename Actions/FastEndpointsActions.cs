@@ -12,7 +12,6 @@ namespace Scandium.Actions
                     return new ServiceResponse()
                     {
                         IsCustomException = false,
-                        IsSuccess = false,
                         IsValidationError = true,
                         ErrorContents = failures.Select(x =>
                             new ErrorResponseContent(x.PropertyName, x.ErrorMessage)

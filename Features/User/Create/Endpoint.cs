@@ -1,10 +1,12 @@
 using FastEndpoints;
 using Scandium.Data;
+using Scandium.Exceptions;
+using Scandium.Model.BaseModels;
 using Scandium.Services.Abstract;
 
 namespace Scandium.Features.User.Create
 {
-    public class Endpoint : Endpoint<Request, Response, Mapper>
+    public class Endpoint : Endpoint<Request, ServiceResponse<Response>, Mapper>
     {
         private readonly IJwtService jwtService;
         private readonly IUserRepo userRepo;
@@ -27,14 +29,15 @@ namespace Scandium.Features.User.Create
             {
                 var user = Map.ToEntity(req);
                 var addedUser = await userRepo.AddAsync(user);
-                await SendAsync(new Response()
+                var response = new Response()
                 {
                     Token = jwtService.Create(addedUser.Id),
                     Id = addedUser.Id,
                     Username = addedUser.Username
-                });
+                };
+                await SendAsync(new ServiceResponse<Response>(response));
             }
-            else throw new Exception("Username must be unique !");
+            else throw new BadRequestException("Username must be unique !");
         }
     }
 }

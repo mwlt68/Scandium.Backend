@@ -4,6 +4,6 @@ namespace Scandium.Data.Abstract
 {
     public interface IMessageRepository:IGenericRepository<Message>
     {
-        Task<List<Message>> GetAllMessagesAsync(Guid currentUserId);
+        Task<List<Message?>> GetLastMessagesAsync(Guid currentUserId);
     }
 }

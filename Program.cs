@@ -13,7 +13,7 @@ using Scandium.Data.Abstract;
 using Scandium.Data.Concreate;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors();
 builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
@@ -30,7 +30,10 @@ builder.Services.AddTransient<IHttpContextService,HttpContextService>();
 builder.Services.AddScoped<IUserRepo,UserRepo>();
 builder.Services.AddScoped<IMessageRepository,MessageRepository>();
 var app = builder.Build();
-
+app.UseCors(builder => builder
+     .AllowAnyOrigin()
+     .AllowAnyMethod()
+     .AllowAnyHeader());   
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
