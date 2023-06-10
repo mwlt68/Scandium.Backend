@@ -20,5 +20,6 @@ namespace Scandium.Data
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Message> Messages => Set<Message>();
+        public DbSet<FriendshipRequest> FriendshipRequests => Set<FriendshipRequest>();
     }
 }
