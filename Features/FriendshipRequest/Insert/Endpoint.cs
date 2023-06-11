@@ -1,5 +1,7 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Exceptions;
+using Scandium.Extensions.EntityExtensions;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
@@ -7,7 +9,7 @@ using FriendshipRequestEntity = Scandium.Model.Entities.FriendshipRequest;
 
 namespace Scandium.Features.FriendshipRequest.Insert
 {
-    public class Endpoint : EndpointWithMapping<Request,ServiceResponse<FriendshipRequestDto>, FriendshipRequestEntity>
+    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<FriendshipRequestDto>, FriendshipRequestEntity>
     {
         private readonly IHttpContextService httpContextService;
         private readonly IFriendshipRequestRepository friendshipRequestRepository;
@@ -24,11 +26,17 @@ namespace Scandium.Features.FriendshipRequest.Insert
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var request = MapToEntity(req);
-            await friendshipRequestRepository.AddAsync(request);
-            var addedRequest = await friendshipRequestRepository.GetByIdThrowAsync(request.Id);
-            var response = MapFromEntity(addedRequest);
-            await SendAsync(response);
+            var currentUser = httpContextService.GetUserIdFromClaims();
+            var isRequestExist = await friendshipRequestRepository.AnyAsync(x => (x.SenderId == currentUser && x.ReceiverId == req.ReceiverId) || (x.SenderId == req.ReceiverId && x.IsApproved));
+            if (!isRequestExist)
+            {
+                var request = MapToEntity(req);
+                await friendshipRequestRepository.AddAsync(request);
+                var addedRequest = await friendshipRequestRepository.GetByIdAsync(request.Id).ThrowIfNotFound();
+                var response = MapFromEntity(addedRequest);
+                await SendAsync(response);
+            }
+            else throw new BadRequestException("This user is already your friend!");
         }
 
         public override FriendshipRequestEntity MapToEntity(Request r) => new()
