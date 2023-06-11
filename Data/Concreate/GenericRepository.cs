@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Scandium.Data.Abstract;
+using Scandium.Extensions.EntityExtensions;
 using Scandium.Model;
 
 namespace Scandium.Data.Concreate
@@ -14,16 +15,17 @@ namespace Scandium.Data.Concreate
         }
 
         public virtual DbSet<TEntity> GetDbSet => context.Set<TEntity>();
+        public virtual IQueryable<TEntity> GetDefaultQueyable() => GetDbSet;
         public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? filter = null)
         {
             return filter == null
-                    ? await GetDbSet.ToListAsync()
-                    : await GetDbSet.Where(filter).ToListAsync();
+                    ? await GetDefaultQueyable().ToListAsync()
+                    : await GetDefaultQueyable().Where(filter).ToListAsync();
         }
 
         public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter)
         {
-            return await GetDbSet.FirstOrDefaultAsync(filter);
+            return await GetDefaultQueyable().FirstOrDefaultAsync(filter);
         }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
@@ -48,7 +50,7 @@ namespace Scandium.Data.Concreate
 
         public virtual async Task<bool> DeleteAsync(Guid id)
         {
-            var deleteEntity = await GetByIdThrowAsync(id);
+            var deleteEntity = await GetByIdAsync(id).ThrowIfNotFound();
             GetDbSet.Remove(deleteEntity);
             var data = await context.SaveChangesAsync();
             if (data > 0)
@@ -58,13 +60,9 @@ namespace Scandium.Data.Concreate
 
         public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
-            return await GetDbSet.FindAsync(id);
+            return await GetDefaultQueyable().FirstOrDefaultAsync(x=> x.Id == id);
         }
 
-        public virtual async Task<TEntity> GetByIdThrowAsync(Guid id)
-        {
-            return await GetDbSet.FindAsync(id) ?? throw new KeyNotFoundException("Entity not found !");
-        }
         public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> filter)
         {
             return await GetDbSet.AnyAsync(filter);
