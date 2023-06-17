@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Scandium.Data.Abstract;
 using Scandium.Extensions.EntityExtensions;
-using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data.Concreate
 {

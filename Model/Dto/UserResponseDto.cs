@@ -1,3 +1,5 @@
+using Scandium.Model.Entities;
+
 namespace Scandium.Model.Dto
 {
     public class UserResponseDto

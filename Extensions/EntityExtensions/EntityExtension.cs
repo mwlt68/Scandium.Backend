@@ -1,5 +1,5 @@
 using Scandium.Exceptions;
-using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Extensions.EntityExtensions
 {

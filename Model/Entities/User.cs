@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Scandium.Model.Entities;
 
-namespace Scandium.Model
+namespace Scandium.Model.Entities
 {
     public class User : BaseEntity
     {
