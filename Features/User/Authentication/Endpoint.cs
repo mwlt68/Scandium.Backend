@@ -36,7 +36,7 @@ namespace Scandium.Features.User.Authentication
                 };
                 await SendAsync (new ServiceResponse<Response>(response));
             }
-            else throw new NotFoundException(typeof(Scandium.Model.User));
+            else throw new NotFoundException(typeof(Scandium.Model.Entities.User));
 
         }
     }
