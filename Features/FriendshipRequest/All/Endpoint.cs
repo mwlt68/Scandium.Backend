@@ -1,5 +1,6 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Exceptions;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
@@ -25,9 +26,14 @@ namespace Scandium.Features.FriendshipRequest.All
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var currentUserId = httpContextService.GetUserIdFromClaims();
-            var friendshipRequests = await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && x.SenderId == currentUserId);
-            var response = new ServiceResponse<List<FriendshipRequestDto>>(friendshipRequests.Select(r => new FriendshipRequestDto(r)).ToList());
+            var friendships = await friendshipRequestRepository.GetAllAcceptedAsync(currentUserId);
+            var friendshipDtos = friendships.Where(x => x != null).Select(x => new FriendshipRequestDto(x!)).ToList();
+            var response = new ServiceResponse<List<FriendshipRequestDto>>(friendshipDtos);
             await SendAsync(response);
         }
+    }
+
+    public class Request
+    {
     }
 }
