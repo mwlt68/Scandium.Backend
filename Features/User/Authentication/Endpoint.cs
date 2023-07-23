@@ -20,7 +20,7 @@ namespace Scandium.Features.User.Authentication
         public override void Configure()
         {
             Verbs(Http.POST);
-            Routes("/authentication");
+            Routes("user/authentication");
             AllowAnonymous();
         }
 
@@ -36,7 +36,7 @@ namespace Scandium.Features.User.Authentication
                 };
                 await SendAsync (new ServiceResponse<Response>(response));
             }
-            else throw new NotFoundException(typeof(Scandium.Model.User));
+            else throw new NotFoundException(typeof(Scandium.Model.Entities.User));
 
         }
     }

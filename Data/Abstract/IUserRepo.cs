@@ -1,5 +1,5 @@
 using Scandium.Data.Abstract;
-using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data
 {

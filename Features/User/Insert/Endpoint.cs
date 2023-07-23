@@ -4,7 +4,7 @@ using Scandium.Exceptions;
 using Scandium.Model.BaseModels;
 using Scandium.Services.Abstract;
 
-namespace Scandium.Features.User.Create
+namespace Scandium.Features.User.Insert
 {
     public class Endpoint : Endpoint<Request, ServiceResponse<Response>, Mapper>
     {

@@ -10,18 +10,15 @@ namespace Scandium.Data.Concreate
         public MessageRepository(AppDbContext context) : base(context)
         {
         }
-        public override async Task<Message> GetByIdThrowAsync(Guid id)
+        public override IQueryable<Message> GetDefaultQueyable()
         {
-            return await GetDbSet
+            return base.GetDefaultQueyable()
                 .Include(x => x.Sender)
-                .Include(x => x.Receiver)
-                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new KeyNotFoundException("Entity not found !");
+                .Include(x => x.Receiver);
         }
         public virtual async Task<List<Message?>> GetLastMessagesAsync(Guid currentUserId)
         {
-            return await GetDbSet
-                .Include(x => x.Sender)
-                .Include(x => x.Receiver)
+            return await GetDefaultQueyable()
                 .OrderBy(x => x.CreatedAt)
                 .Where(x => x.SenderId == currentUserId || x.ReceiverId == currentUserId)
                 .GroupBy(m => m.SenderId == currentUserId ? m.ReceiverId : m.SenderId)

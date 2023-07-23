@@ -29,6 +29,7 @@ builder.Services.AddScoped<IJwtService,JwtService>();
 builder.Services.AddTransient<IHttpContextService,HttpContextService>();
 builder.Services.AddScoped<IUserRepo,UserRepo>();
 builder.Services.AddScoped<IMessageRepository,MessageRepository>();
+builder.Services.AddScoped<IFriendshipRequestRepository,FriendshipRequestRepository>();
 var app = builder.Build();
 app.UseCors(builder => builder
      .AllowAnyOrigin()
