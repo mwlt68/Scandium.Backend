@@ -1,6 +1,5 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
-using Scandium.Exceptions;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
@@ -20,7 +19,7 @@ namespace Scandium.Features.FriendshipRequest.All
         }
         public override void Configure()
         {
-            Verbs(Http.POST);
+            Verbs(Http.GET);
             Routes("/friendship/all");
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)

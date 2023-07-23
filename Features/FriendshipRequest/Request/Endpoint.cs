@@ -25,7 +25,7 @@ namespace Scandium.Features.FriendshipRequest.Request
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var currentUserId = httpContextService.GetUserIdFromClaims();
-            var friendshipRequests = await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && x.SenderId == currentUserId);
+            var friendshipRequests = await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && x.ReceiverId == currentUserId);
             var response = new ServiceResponse<List<FriendshipRequestDto>>(friendshipRequests.Select(r => new FriendshipRequestDto(r)).ToList());
             await SendAsync(response);
         }
