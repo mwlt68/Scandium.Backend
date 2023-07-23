@@ -1,11 +1,12 @@
 using FastEndpoints;
 using Scandium.Data.Abstract;
+using Scandium.Extensions.EntityExtensions;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using MessageEntity = Scandium.Model.Entities.Message;
 
-namespace Scandium.Features.Message.Create
+namespace Scandium.Features.Message.Insert
 {
     public class Endpoint : EndpointWithMapping<Request,ServiceResponse<MessageResponseDto>, MessageEntity>
     {
@@ -26,7 +27,7 @@ namespace Scandium.Features.Message.Create
         {
             var message = MapToEntity(req);
             await messageRepository.AddAsync(message);
-            var addedMessage = await messageRepository.GetByIdThrowAsync(message.Id);
+            var addedMessage = await messageRepository.GetByIdAsync(message.Id).ThrowIfNotFound();
             var response = MapFromEntity(addedMessage);
             await SendAsync (response);
         }

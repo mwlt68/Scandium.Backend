@@ -1,7 +1,7 @@
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Scandium.Model;
+using Scandium.Model.Entities;
 
 namespace Scandium.Extensions.QueryableExtensions
 {

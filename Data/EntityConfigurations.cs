@@ -32,11 +32,29 @@ namespace Scandium.Data
                 .WithOne(m => m.Sender)
                 .HasForeignKey(m => m.SenderId)
                 .IsRequired();
+            builder
+                .HasMany(u => u.ReceiverFriendshipRequests)
+                .WithOne(m => m.Receiver)
+                .HasForeignKey(m => m.ReceiverId)
+                .IsRequired();
+            builder
+                .HasMany(u => u.SenderFriendshipRequests)
+                .WithOne(m => m.Sender)
+                .HasForeignKey(m => m.SenderId)
+                .IsRequired();
         }
     }
     public class MessageConfigurations : BaseEntityConfigurations<Message>
     {
         public override void Configure(EntityTypeBuilder<Message> builder)
+        {
+            base.Configure(builder);
+        }
+    }
+
+    public class FriendshipRequestConfigurations : BaseEntityConfigurations<FriendshipRequest>
+    {
+        public override void Configure(EntityTypeBuilder<FriendshipRequest> builder)
         {
             base.Configure(builder);
         }
