@@ -20,7 +20,7 @@ namespace Scandium.Features.User.Authentication
         public override void Configure()
         {
             Verbs(Http.POST);
-            Routes("/authentication");
+            Routes("user/authentication");
             AllowAnonymous();
         }
 

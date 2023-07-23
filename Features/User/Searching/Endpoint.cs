@@ -28,9 +28,9 @@ namespace Scandium.Features.User.Searching
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var searchKey= req.Username?.Trim() ?? String.Empty;
+            var searchKey= req.Username?.Trim().ToLower() ?? String.Empty;
             var currentUserId = httpContextService.GetUserIdFromClaims();
-            var users = await userRepo.GetListAsync(x=> x.Username!.Contains(searchKey) && x.Id != currentUserId && !x.ReceiverFriendshipRequests!.Any(x=> x.SenderId == currentUserId));
+            var users = await userRepo.GetListAsync(x=> x.Username!.ToLower().Contains(searchKey) && x.Id != currentUserId && !x.ReceiverFriendshipRequests!.Any(x=> x.SenderId == currentUserId));
             var response = new ServiceResponse<List<UserResponseDto>>(users!.Select(r => new UserResponseDto(r)).ToList());
             await SendAsync(response);
         }
