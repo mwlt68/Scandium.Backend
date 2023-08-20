@@ -10,6 +10,15 @@ namespace Scandium.Data.Concreate
         public MessageRepository(AppDbContext context) : base(context)
         {
         }
+
+        public async Task<List<Message>> GetConversationAsync(Guid currentUserId, Guid oppositeUserId)
+        {
+            return await GetDbSet
+                .OrderBy(x => x.CreatedAt)
+                .Where(x => (x.SenderId == currentUserId  && x.ReceiverId == oppositeUserId) || (x.ReceiverId == currentUserId && x.SenderId == oppositeUserId))
+                .ToListAsync();
+        }
+
         public override IQueryable<Message> GetDefaultQueyable()
         {
             return base.GetDefaultQueyable()

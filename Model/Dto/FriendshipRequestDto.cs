@@ -8,8 +8,8 @@ namespace Scandium.Model.Dto
         public FriendshipRequestDto(FriendshipRequest friendshipRequest)
         {
             Id = friendshipRequest.Id;
-            Sender = friendshipRequest.Sender != null ? new UserResponseDto(friendshipRequest.Sender): null;
-            Receiver = friendshipRequest.Receiver != null ? new UserResponseDto(friendshipRequest.Receiver): null;
+            Sender = UserResponseDto.Get(friendshipRequest.Sender);
+            Receiver =UserResponseDto.Get(friendshipRequest.Receiver);
             IsApproved = friendshipRequest.IsApproved;
             CreateDate = friendshipRequest.CreatedAt;
         }

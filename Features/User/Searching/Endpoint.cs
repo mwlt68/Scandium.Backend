@@ -31,7 +31,8 @@ namespace Scandium.Features.User.Searching
             var searchKey= req.Username?.Trim().ToLower() ?? String.Empty;
             var currentUserId = httpContextService.GetUserIdFromClaims();
             var users = await userRepo.GetListAsync(x=> x.Username!.ToLower().Contains(searchKey) && x.Id != currentUserId && !x.ReceiverFriendshipRequests!.Any(x=> x.SenderId == currentUserId));
-            var response = new ServiceResponse<List<UserResponseDto>>(users!.Select(r => new UserResponseDto(r)).ToList());
+            var userDtos =users.Select(r => UserResponseDto.Get(r)!).ToList();
+            var response = new ServiceResponse<List<UserResponseDto>>(userDtos);
             await SendAsync(response);
         }
     }
