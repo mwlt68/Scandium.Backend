@@ -7,8 +7,8 @@ namespace Scandium.Model.Dto
         public MessageResponseDto(Message message)
         {
             Id = message.Id;
-            Sender = message.Sender != null ? new UserResponseDto(message.Sender): null;
-            Receiver = message.Receiver != null ? new UserResponseDto(message.Receiver): null;
+            Sender =UserResponseDto.Get(message.Sender);
+            Receiver =UserResponseDto.Get(message.Receiver);
             Content = message.Content;
             CreateDate = message.CreatedAt;
         }
