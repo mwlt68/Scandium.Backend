@@ -1,18 +1,14 @@
-using Microsoft.AspNetCore.SignalR;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Scandium.Hubs
 {
-    public class MessageHub: Hub<IMessageClient> 
+    [Authorize]
+    public class MessageHub: BaseHub<IMessageClient> 
     {
-        public async Task SendMessage(string message)
-        {
-            Console.WriteLine("Message: "+ message);
-            await Clients.All.ReceiveMessage(message);
-        }
+        
     }
 
     public interface IMessageClient
     {
-        Task ReceiveMessage(string message);
+        Task ReceiveMessage(Scandium.Model.Dto.MessageDto messageDto);
     }
 }
