@@ -2,7 +2,6 @@ using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Scandium.Data;
 using FastEndpoints.Swagger;
-using FastEndpoints.Security;
 using Scandium.Services.Abstract;
 using Scandium.Services;
 using Scandium.Extensions.ServiceExtensions;
@@ -22,10 +21,12 @@ builder.Services.AddSwaggerDoc();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddSettings(builder.Configuration);
-builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
-        opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+builder.Services.AddEntityFrameworkNpgsql()
+    .AddDbContext<AppDbContext>(opt => opt
+        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetValue<string>("Jwt:Key"));
+builder.Services.AddCustomJwtAuthentication(builder.Configuration);
+
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddTransient<IHttpContextService, HttpContextService>();
@@ -44,11 +45,15 @@ app.UseCors(builder => builder
      .AllowAnyOrigin()
      .AllowAnyMethod()
      .AllowAnyHeader());
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<MessageHub>("/messageHub");
+
+app.MapHub<MessageHub>("/hubs/messageHub");
 
 app.UseFastEndpoints(FastEndpointsAction.GetConfigActions);
 app.Run();
