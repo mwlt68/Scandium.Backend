@@ -1,6 +1,8 @@
 using FastEndpoints;
+using Microsoft.AspNetCore.SignalR;
 using Scandium.Data.Abstract;
 using Scandium.Extensions.EntityExtensions;
+using Scandium.Hubs;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
@@ -12,11 +14,14 @@ namespace Scandium.Features.Message.Insert
     {
         private readonly IHttpContextService httpContextService;
         private readonly IMessageRepository messageRepository;
+        private readonly IHubContext<MessageHub, IMessageClient> chatHub;
+        
 
-        public Endpoint(IHttpContextService httpContextService, IMessageRepository messageRepository)
+        public Endpoint(IHttpContextService httpContextService, IMessageRepository messageRepository,IHubContext<MessageHub, IMessageClient> chatHub)
         {
             this.httpContextService = httpContextService;
             this.messageRepository = messageRepository;
+            this.chatHub = chatHub;
         }
         public override void Configure()
         {
@@ -28,8 +33,22 @@ namespace Scandium.Features.Message.Insert
             var message = MapToEntity(req);
             await messageRepository.AddAsync(message);
             var addedMessage = await messageRepository.GetByIdAsync(message.Id).ThrowIfNotFound();
+            await RunReceiveMessage(req.ReceiverId.ToString(), addedMessage);
             var response = MapFromEntity(addedMessage);
-            await SendAsync (response);
+            await SendAsync(response);
+        }
+
+        private async Task RunReceiveMessage(String receiverId , MessageEntity addedMessage)
+        {
+            var messageDto = new MessageDto()
+            {
+                Id = addedMessage.Id,
+                Content = addedMessage.Content,
+                CreatedAt = addedMessage.CreatedAt,
+                ReceiverId = addedMessage.ReceiverId,
+                SenderId = addedMessage.SenderId,
+            };
+            await chatHub.Clients.Group(receiverId).ReceiveMessage(messageDto);
         }
 
         public override MessageEntity MapToEntity(Request r) => new()
