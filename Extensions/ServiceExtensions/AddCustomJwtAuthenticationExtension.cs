@@ -30,9 +30,8 @@ namespace Scandium.Extensions.ServiceExtensions
                             {
                                 var accessToken = context.Request.Query["access_token"];
                                 var path = context.HttpContext.Request.Path;
-                                if (!string.IsNullOrWhiteSpace(accessToken) )
+                                if (!string.IsNullOrWhiteSpace(accessToken))
                                 {
-                                    bool a =path.StartsWithSegments("/hubs");
                                     context.Token = accessToken;
                                 }
                                 return Task.CompletedTask;
