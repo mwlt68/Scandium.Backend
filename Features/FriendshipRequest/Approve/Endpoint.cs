@@ -8,7 +8,7 @@ using FriendshipRequestEntity = Scandium.Model.Entities.FriendshipRequest;
 
 namespace Scandium.Features.FriendshipRequest.Approve
 {
-    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<FriendshipRequestDto>, FriendshipRequestEntity>
+    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<FriendshipResponseDto>, FriendshipRequestEntity>
     {
         private readonly IHttpContextService httpContextService;
         private readonly IFriendshipRequestRepository friendshipRequestRepository;
@@ -50,6 +50,6 @@ namespace Scandium.Features.FriendshipRequest.Approve
             }
             throw new NotFoundException("Friendship request not found !");
         }
-        public override ServiceResponse<FriendshipRequestDto> MapFromEntity(FriendshipRequestEntity e) => new ServiceResponse<FriendshipRequestDto>(new FriendshipRequestDto(e));
+        public override ServiceResponse<FriendshipResponseDto> MapFromEntity(FriendshipRequestEntity e) => new ServiceResponse<FriendshipResponseDto>(new FriendshipResponseDto(e));
     }
 }
