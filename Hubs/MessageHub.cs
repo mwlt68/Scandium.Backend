@@ -9,6 +9,6 @@ namespace Scandium.Hubs
 
     public interface IMessageClient
     {
-        Task ReceiveMessage(Scandium.Model.Dto.MessageDto messageDto);
+        Task ReceiveMessage(Model.Dto.MessageResponseDto messageDto);
     }
 }

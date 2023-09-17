@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FastEndpoints;
 using Microsoft.AspNetCore.SignalR;
 using Scandium.Data.Abstract;
@@ -38,17 +39,10 @@ namespace Scandium.Features.Message.Insert
             await SendAsync(response);
         }
 
-        private async Task RunReceiveMessage(String receiverId , MessageEntity addedMessage)
+        private async Task RunReceiveMessage(string receiverId , MessageEntity addedMessage)
         {
-            var messageDto = new MessageDto()
-            {
-                Id = addedMessage.Id,
-                Content = addedMessage.Content,
-                CreatedAt = addedMessage.CreatedAt,
-                ReceiverId = addedMessage.ReceiverId,
-                SenderId = addedMessage.SenderId,
-            };
-            await chatHub.Clients.Group(receiverId).ReceiveMessage(messageDto);
+            var dto = new MessageResponseDto(addedMessage);
+            await chatHub.Clients.Group(receiverId).ReceiveMessage(dto);
         }
 
         public override MessageEntity MapToEntity(Request r) => new()
