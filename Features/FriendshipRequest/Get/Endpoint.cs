@@ -5,9 +5,9 @@ using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
 using FriendshipRequestEntity = Scandium.Model.Entities.FriendshipRequest;
 
-namespace Scandium.Features.FriendshipRequest.Request
+namespace Scandium.Features.FriendshipRequest.Get
 {
-    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<List<FriendshipRequestDto>>, FriendshipRequestEntity>
+    public class Endpoint : EndpointWithMapping<Request, ServiceResponse<List<FriendshipResponseDto>>, FriendshipRequestEntity>
     {
         private readonly IHttpContextService httpContextService;
         private readonly IFriendshipRequestRepository friendshipRequestRepository;
@@ -20,19 +20,24 @@ namespace Scandium.Features.FriendshipRequest.Request
         public override void Configure()
         {
             Verbs(Http.GET);
-            Routes("/friendship/request");
+            Routes("/friendship");
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var currentUserId = httpContextService.GetUserIdFromClaims();
-            var friendshipRequests = await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && x.ReceiverId == currentUserId);
-            var response = new ServiceResponse<List<FriendshipRequestDto>>(friendshipRequests.Select(r => new FriendshipRequestDto(r)).ToList());
+            var friendshipRequests=new List<FriendshipRequestEntity>();
+            if (req.isOnlyAccepted)
+                friendshipRequests = await friendshipRequestRepository.GetAllAcceptedAsync(currentUserId);
+            else 
+                friendshipRequests= await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && x.ReceiverId == currentUserId);
+            var friendshipDtos = friendshipRequests.Where(x => x != null).Select(x => new FriendshipResponseDto(x!)).ToList();
+            var response = new ServiceResponse<List<FriendshipResponseDto>>(friendshipDtos);
             await SendAsync(response);
         }
     }
 
     public class Request 
     {
-
+        public bool isOnlyAccepted { get; set; }
     }
 }
