@@ -1,6 +1,8 @@
 using FastEndpoints;
+using Microsoft.AspNetCore.SignalR;
 using Scandium.Data.Abstract;
 using Scandium.Exceptions;
+using Scandium.Hubs;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
 using Scandium.Services.Abstract;
@@ -12,11 +14,14 @@ namespace Scandium.Features.FriendshipRequest.Approve
     {
         private readonly IHttpContextService httpContextService;
         private readonly IFriendshipRequestRepository friendshipRequestRepository;
+        private readonly IHubContext<FriendshipRequestHub, IFriendshipRequesClient> friendshipHub;
 
-        public Endpoint(IHttpContextService httpContextService, IFriendshipRequestRepository friendshipRequestRepository)
+
+        public Endpoint(IHttpContextService httpContextService, IFriendshipRequestRepository friendshipRequestRepository, IHubContext<FriendshipRequestHub, IFriendshipRequesClient> friendshipHub)
         {
             this.httpContextService = httpContextService;
             this.friendshipRequestRepository = friendshipRequestRepository;
+            this.friendshipHub = friendshipHub;
         }
         public override void Configure()
         {
@@ -26,29 +31,23 @@ namespace Scandium.Features.FriendshipRequest.Approve
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var currentUserId = httpContextService.GetUserIdFromClaims();
-            var friendshipRequests = await friendshipRequestRepository.GetListAsync(x => !x.IsApproved && (x.SenderId == req.SenderId && x.ReceiverId == currentUserId) || (x.SenderId == currentUserId && x.ReceiverId == req.SenderId));
-
-            if (friendshipRequests.Count() > 0)
+            var friendshipRequest = await friendshipRequestRepository.GetAsync(x => x.Id == req.FriendshipRequestId && !x.IsApproved && x.ReceiverId == currentUserId);
+            if (friendshipRequest != null)
             {
-                var requestWillApprove = friendshipRequests.FirstOrDefault(x => x.ReceiverId == currentUserId);
-                if(requestWillApprove != null){
-                    requestWillApprove.IsApproved = true;
-                    await friendshipRequestRepository.UpdateAsync(requestWillApprove);
-                    // Remove oher request send by same user
-                    if (friendshipRequests.Count() > 1)
-                    {
-                        foreach (var request in friendshipRequests)
-                        {
-                            if (request.Id != requestWillApprove.Id)
-                                await friendshipRequestRepository.DeleteAsync(request.Id);
-                        }
-                    }
-                    var response = MapFromEntity(requestWillApprove);
-                    await SendAsync(response);
-                    return;
-                }
+                friendshipRequest.IsApproved = true;
+                await friendshipRequestRepository.UpdateAsync(friendshipRequest);
+                await RunApproveFriendshipRequest(friendshipRequest);
+                var response = MapFromEntity(friendshipRequest);
+                await SendAsync(response);
             }
-            throw new NotFoundException("Friendship request not found !");
+            else
+                throw new NotFoundException("Friendship request not found !");
+        }
+
+        private async Task RunApproveFriendshipRequest(FriendshipRequestEntity addedMessage)
+        {
+            var dto = new FriendshipResponseDto(addedMessage);
+            await friendshipHub.Clients.Group(addedMessage.SenderId.ToString()).ApproveFriendshipRequest(dto);
         }
         public override ServiceResponse<FriendshipResponseDto> MapFromEntity(FriendshipRequestEntity e) => new ServiceResponse<FriendshipResponseDto>(new FriendshipResponseDto(e));
     }

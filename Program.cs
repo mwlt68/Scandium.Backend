@@ -54,6 +54,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHub<MessageHub>("/hubs/messageHub");
+app.MapHub<FriendshipRequestHub>("/hubs/friendshipRequestHub");
 
 app.UseFastEndpoints(FastEndpointsAction.GetConfigActions);
 app.Run();
