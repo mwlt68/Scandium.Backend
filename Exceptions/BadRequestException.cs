@@ -3,6 +3,6 @@ namespace Scandium.Exceptions
 {
     public class BadRequestException : CustomBaseException
     {
-        public BadRequestException(string? message = "Bad Request Error !") : base("Bad Request",message) { }
+        public BadRequestException(string? title = "BadRequest",string? content = "Bad Request Error !") : base(title,content) { }
     }
 }
