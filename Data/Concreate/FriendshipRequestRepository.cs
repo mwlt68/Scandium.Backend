@@ -15,12 +15,12 @@ public class FriendshipRequestRepository : GenericRepository<FriendshipRequest>,
             .Include(x => x.Sender)
             .Include(x => x.Receiver);
     }
-    public async Task<List<FriendshipRequest?>> GetAllAcceptedAsync(Guid currentUserId)
+    public async Task<List<FriendshipRequest>> GetAllAcceptedAsync(Guid currentUserId)
     {
         return await GetDefaultQueyable()
             .OrderByDescending(x => x.CreatedAt)
-            .Where(x => x.SenderId == currentUserId || x.ReceiverId == currentUserId && x.IsApproved)
+            .Where(x => (x.SenderId == currentUserId || x.ReceiverId == currentUserId) && x.IsApproved)
             .GroupBy(m => m.SenderId == currentUserId ? m.ReceiverId : m.SenderId)
-            .Select(g => g.FirstOrDefault()).ToListAsync();
+            .Select(g => g.First()).ToListAsync();
     }
 }

@@ -3,9 +3,9 @@ using Scandium.Model.Entities;
 
 namespace Scandium.Model.Dto
 {
-    public class FriendshipRequestDto
+    public class FriendshipResponseDto
     {
-        public FriendshipRequestDto(FriendshipRequest friendshipRequest)
+        public FriendshipResponseDto(FriendshipRequest friendshipRequest)
         {
             Id = friendshipRequest.Id;
             Sender = UserResponseDto.Get(friendshipRequest.Sender);
