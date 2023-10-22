@@ -1,8 +1,8 @@
-using System.Runtime.CompilerServices;
 using FastEndpoints;
 using Microsoft.AspNetCore.SignalR;
 using Scandium.Data.Abstract;
 using Scandium.Extensions.EntityExtensions;
+using Scandium.Helpers;
 using Scandium.Hubs;
 using Scandium.Model.BaseModels;
 using Scandium.Model.Dto;
@@ -31,26 +31,33 @@ namespace Scandium.Features.Message.Insert
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var message = MapToEntity(req);
+            var message = await MapToEntityAsync(req);
             await messageRepository.AddAsync(message);
             var addedMessage = await messageRepository.GetByIdAsync(message.Id).ThrowIfNotFound();
             await RunReceiveMessage(req.ReceiverId.ToString(), addedMessage);
-            var response = MapFromEntity(addedMessage);
+            var response = await MapFromEntityAsync(addedMessage);
             await SendAsync(response);
         }
 
         private async Task RunReceiveMessage(string receiverId , MessageEntity addedMessage)
         {
-            var dto = new MessageResponseDto(addedMessage);
+            var dto = await MessageResponseDto.Get(addedMessage);
             await chatHub.Clients.Group(receiverId).ReceiveMessage(dto);
         }
-
-        public override MessageEntity MapToEntity(Request r) => new()
+        public override async Task<MessageEntity> MapToEntityAsync(Request r)
         {
-            SenderId = httpContextService.GetUserIdFromClaims(),
-            ReceiverId = r.ReceiverId,
-            Content = r.Content,
-        };
-        public override ServiceResponse<MessageResponseDto> MapFromEntity(MessageEntity e) => new ServiceResponse<MessageResponseDto>(new MessageResponseDto(e));
+            var content = await AES.EncryptAsync(r.Content!);
+            return new()
+            {
+                SenderId = httpContextService.GetUserIdFromClaims(),
+                ReceiverId = r.ReceiverId,
+                Contents =content,
+            };
+        }
+        public override async Task<ServiceResponse<MessageResponseDto>> MapFromEntityAsync(MessageEntity e)
+        {
+            var messageModel = await MessageResponseDto.Get(e);
+            return new  ServiceResponse<MessageResponseDto>(messageModel);
+        }
     }
 }
