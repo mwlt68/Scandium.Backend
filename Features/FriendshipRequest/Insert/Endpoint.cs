@@ -41,7 +41,7 @@ namespace Scandium.Features.FriendshipRequest.Insert
                 await RunGetFriendshipRequest(addedRequest);
                 await SendAsync(response);
             }
-            else throw new BadRequestException("AlreadyFriend","This user is already your friend!");
+            else throw new BadRequestException("alreadyFriend","This user is already your friend!");
         }
 
         private async Task RunGetFriendshipRequest(FriendshipRequestEntity addedMessage)

@@ -37,7 +37,7 @@ namespace Scandium.Features.User.Insert
                 };
                 await SendAsync(new ServiceResponse<Response>(response));
             }
-            else throw new BadRequestException("UsernameNotUnique","Username must be unique !");
+            else throw new BadRequestException("usernameNotUnique","Username must be unique !");
         }
     }
 }
