@@ -24,7 +24,7 @@ namespace Scandium.Features.User.Insert
         }
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            bool usernameUnique = !await userRepo.AnyAsync(x => x.Username == req.Username);
+            bool usernameUnique = !await userRepo.AnyAsync(x => x.Username!.ToLower() == req.Username!.ToLower());
             if (usernameUnique)
             {
                 var user = Map.ToEntity(req);
@@ -37,7 +37,7 @@ namespace Scandium.Features.User.Insert
                 };
                 await SendAsync(new ServiceResponse<Response>(response));
             }
-            else throw new BadRequestException("UsernameNotUnique","Username must be unique !");
+            else throw new BadRequestException("usernameNotUnique","Username must be unique !");
         }
     }
 }

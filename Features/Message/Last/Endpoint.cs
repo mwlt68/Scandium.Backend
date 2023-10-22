@@ -26,11 +26,22 @@ namespace Scandium.Features.Message.Last
         {
             var userId = httpContextService.GetUserIdFromClaims();
             var messages = await messageRepository.GetLastMessagesAsync(userId);
-            var response = MapFromEntity(messages);
+            var response = await MapFromEntityAsync(messages);
             await SendAsync(response);
         }
 
-        public ServiceResponse<List<MessageResponseDto>> MapFromEntity(List<MessageEntity?> es) => new ServiceResponse<List<MessageResponseDto>>(es.Where(x=> x!= null).Select(e => new MessageResponseDto(e!)).ToList());
+        public async Task<ServiceResponse<List<MessageResponseDto>>> MapFromEntityAsync(List<MessageEntity?> messages)
+        {
+            var messageResponses  =  new List<MessageResponseDto>();
+            foreach (var message in messages)
+            {
+                if(message is not null){
+                    var messageResponse = await MessageResponseDto.Get(message);
+                    messageResponses.Add(messageResponse);
+                }
+            }
+            return new ServiceResponse<List<MessageResponseDto>>(messageResponses);
+        }
 
     }
 }

@@ -1,17 +1,25 @@
+using Scandium.Helpers;
 using Scandium.Model.Entities;
 
 namespace Scandium.Model.Dto
 {
     public class MessageResponseDto
     {
-        public MessageResponseDto(Message message)
+        public MessageResponseDto(){}
+        public static async Task<MessageResponseDto> Get(Message message)
         {
-            Id = message.Id;
-            Sender =UserResponseDto.Get(message.Sender);
-            Receiver =UserResponseDto.Get(message.Receiver);
-            Content = message.Content;
-            CreateDate = message.CreatedAt;
+            var decryptedContent = await AES.DecryptAsync(message.Contents!);
+            return new MessageResponseDto()
+            {
+                Id = message.Id,
+                Sender = UserResponseDto.Get(message.Sender),
+                Receiver = UserResponseDto.Get(message.Receiver),
+                Content = decryptedContent,
+                CreateDate = message.CreatedAt,
+            };
         }
+
+
 
         public Guid Id { get; set; }
         public UserResponseDto? Sender { get; set; }
