@@ -1,24 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Scandium.Model
+namespace Scandium.Model.Entities
 {
     public abstract class BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-        public DateTime CreatedAt
-        {
-           get
-           {
-              return this.dateCreated.HasValue
-                 ? this.dateCreated.Value
-                 : DateTime.UtcNow;
-           }
-
-           set { this.dateCreated = value; }
-        }
-
-        private DateTime? dateCreated = null;
+        public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; } =DateTime.UtcNow;
     }
 }

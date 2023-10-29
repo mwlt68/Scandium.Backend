@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Scandium.Model;
+using Microsoft.EntityFrameworkCore;
+using Scandium.Model.Entities;
 
 namespace Scandium.Data.Abstract
 {
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity, new()
     {
+        DbSet<TEntity> GetDbSet{get;}
+        IQueryable<TEntity> GetDefaultQueyable();
         Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? filter = null);
 
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter);
-        Task<TEntity?> GetByIdAsync(int id);
+        Task<TEntity?> GetByIdAsync(Guid id);
 
         Task<TEntity> AddAsync(TEntity entity);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> filter);
@@ -21,6 +20,6 @@ namespace Scandium.Data.Abstract
 
         Task<TEntity> UpdateAsync(TEntity entity);
 
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }
