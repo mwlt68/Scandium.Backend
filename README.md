@@ -7,6 +7,7 @@ I personally developed.
 
 The user registers with his/her username and password. User logs into the system with his information. Sends friend requests to other users. If the request is accepted, users can send messages to each other.
 
+You can check out how I developed <b>mobile project</b> by visiting the [Scandium-Mobile](https://github.com/mwlt68/Scandium-Mobile)
 
 # 📝 What is Scandium.Backend
 
